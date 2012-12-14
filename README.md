@@ -19,3 +19,7 @@ To install BUS you have to:
 - Copy includes/config-sample.php to includes/config.php and put your configurations
 
 - You can delete the "db" folder and the includes/config-sample.php
+
+3) Enjoying
+---------------
+You can start doing your first shortlink going to: http://where.you/placed/the/BUS/
