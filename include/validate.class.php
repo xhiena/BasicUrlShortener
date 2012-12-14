@@ -2,7 +2,7 @@
 /*********************************************************************
     validate.class.php
 
-    the class with the validadions.
+    The class with the validadions.
 
     xhiena <xhiena@gmail.com>
     http://www.xhiena.net

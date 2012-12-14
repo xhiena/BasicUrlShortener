@@ -1,4 +1,15 @@
 <?php
+/*********************************************************************
+    functions.php
+
+    Here are the functions for general use
+    
+    Updated: the validation functions are now in the validate class
+
+    xhiena <xhiena@gmail.com>
+    http://www.xhiena.net
+    
+**********************************************************************/
 /**
  * Generates a 6-character code composed of uppercase, lowercase, numbers, - and _
  * 
@@ -16,30 +27,5 @@ function generateCode(){
         }
     }
     return $c;
-}
-function getUrl($code){
-    global $db;
-    $sql="select url from BUS_link where shortcode like '$code'";
-    $result=$db->query($sql);
-    if ($result!=false){
-        $row = $result->fetch_object();
-         if ($row){
-           return $row->url;
-         }
-         else{
-             return false;
-         }
-    }
-    else{
-        return false;
-    }
-    
-}
-
-function addVisit($code){
-    global $db;
-     $sql="Update BUS_link set visited=visited+1 where shortcode like '$code'";
-    $result=$db->query($sql);
-    return $result;
 }
 ?>

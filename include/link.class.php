@@ -19,19 +19,26 @@ class Link{
     //loaders
     public function __construct(){}
     
-    /*  The constructor is empty because I need to load a link by any of his fields (id, shortcode or url)
+    /*  
+        The constructor is empty because I need to load a link by any of his fields (id, shortcode or url)
         Using the Factory Pattern (the with* functions) I can make a "multiconstructor"  
     */
+    
+    /** loader by ID */
     public static function withID( $id ) {
     	$link_instance = new self();
     	$link_instance->loadByID( $id );
     	return $link_instance;
     }
+    
+    /** loader by shortcode */ 
     public static function withShortCode( $shortcode ) {
     	$link_instance = new self();
     	$link_instance->loadByShortCode( $shortcode );
     	return $link_instance;
     }
+    
+    /** loader by url */
     public static function withUrl( $url ) {
     	$link_instance = new self();
     	$link_instance->loadByUrl( $shortcode );
@@ -52,15 +59,22 @@ class Link{
     
     //Getters
     
+    /** returns the id */
     function getID(){
         return $this->id;
     }
+    
+    /** returns the url */
     function getUrl(){
         return $this->url;
     }
+    
+    /** returns the shortcode */
     function getShortCode(){
         return $this->shortcode;
     }
+    
+    /** returns the visits */
     function getVisits(){
         return $this->visits;
     }
@@ -81,24 +95,25 @@ class Link{
         $stmt=$db->prepare($sql);
         $stmt->bindParam($type,$value);
         $result=$stmt->execute();
-        if ($result!=false):
+        $stmt->store_result();
+        if (($result!=false)&& ($stmt->num_rows==1)):
             $row = $result->fetch_object();
-             if ($row):
-                $this->id=$row->id;
-                $this->url=$row->url;
-                $this->shortcode=$row->shortcode;
-                $this->visits=$row->visits;
-                return true;
-             endif;
+            $this->id=$row->id;
+            $this->url=$row->url;
+            $this->shortcode=$row->shortcode;
+            $this->visits=$row->visits;
+            return true;
+        else:
+            throw new Exception(TXT_ERROR_NOT_FOUND);
         endif;
         $stmt->close(); 
         return false;
     }
     
-    /**
+    
+     /**
      * Add and return a link to the database
      */
-     
      static function create($url){
         global $db;
         $url=urldecode($_GET['u']);
@@ -111,8 +126,10 @@ class Link{
         $stmt=$db->prepare($sql);
         $stmt->bindParam("ss",$url,$code);
         if($stmt->execute($sql)):
+            $stmt->close(); 
             return self::loadByUrl($url);
         else:
+            $stmt->close(); 
             return false;
         endif;
      }
@@ -120,24 +137,39 @@ class Link{
     /**
      * returns the shorted url
      * 
-     * $format= html|xml|json|txt
+     * $format= html|xml|json|plain
+     * 
      */
     public function getLink($format="html"){
+        $return_value="";
         switch ($format){
             default:
             case "html":
-                 echo TXT_ADDED.": ".BASE_LINK_URL."".$this->shortcode;
+                 $return_value= "<p>".TXT_ADDED.": ".BASE_LINK_URL."".$this->shortcode."</p>";
                 break;
             case "xml":
-                echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<response>\n    <data>".BASE_LINK_URL."".$this->shortcode."</data>\n</response>";
+                $return_value= "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<response>\n    <data>".BASE_LINK_URL."".$this->shortcode."</data>\n</response>";
                 break;
             case "json":
-                echo "{data : \"".BASE_LINK_URL."".$this->shortcode."\"}";
+                $return_value= "{data : \"".BASE_LINK_URL."".$this->shortcode."\"}";
                 break;
-            case "txt":
-                echo BASE_LINK_URL.$this->shortcode;
+            case "plain":
+                $return_value= BASE_LINK_URL.$this->shortcode;
                 break;
         }
     }
     
+    /**
+     * Adds a visit to the link
+     */
+     public function addVisit(){
+         global $db;
+         $this->visits++;
+         $sql="Update BUS_link set visits=? where id = ?";
+         $stmt=$db->prepare($sql);
+         $stmt->bindParam("i",$this->visits);
+         $ok=$stmt->execute($sql);
+         $stmt->close(); 
+         return $ok;
+     }
 }

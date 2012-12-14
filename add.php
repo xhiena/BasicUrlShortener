@@ -1,11 +1,25 @@
 <?php
+/*********************************************************************
+    add.php
+
+    This page creates the shortcode link
+    
+    Expects:
+        in $_GET["u"] a urlencoded url
+        in $_GET["r"] the output format (html, plain, xml, json)
+
+    xhiena <xhiena@gmail.com>
+    http://www.xhiena.net
+    
+**********************************************************************/
     require("include/top.php");
-    $u_sql=urldecode($_GET['u']);
-    $formatos_return=Array("html","xml","json","txt");
-    $r=isset($_GET["r"])?($_GET['r']):($formatos_return[0]);
-    $r=(in_array($r,$formatos_return))?($r):($formatos_return[0]);
-    $u=addUrl($u_sql);
-    if ($u){
+    try{
+        $new_link=Link::create($_GET["u"]);
+        $f=isset($_GET["r"])?($_GET["r"]):("");
+        $c=$new_link->getShortCode();
         header("location: /added/".$r."/".$u);
+    }
+    catch(Exception $e){
+         echo $e->getMessage();
     }
 ?>

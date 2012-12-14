@@ -1,8 +1,46 @@
 <?php
-    require("include/top.php");
-    ?>
-    <form action="add.php" method="get">
-    <input type="text" name="u"/><input type="submit" value="enviar"/>
-    </form>
-<a href="add.php?u=<?php echo urlencode("http://www.google.es/search?q=htaccess+redirect&ie=utf-8&oe=utf-8&aq=t&rls=org.mozilla:es-ES:official&client=firefox-a#hl=es&client=firefox-a&hs=4wX&rls=org.mozilla:es-ES%3Aofficial&sclient=psy-ab&q=htaccess+fancy+url&oq=htaccess+fancy&gs_l=serp.3.1.0i30l4.0.0.2.76.0.0.0.0.0.0.0.0..0.0...0.0...1c.qe17OAzQyK0&pbx=1&bav=on.2,or.r_gc.r_pw.r_qf.&fp=381a91735e25fd16&biw=1291&bih=704");?>">asd</a>
+/*********************************************************************
+    index.php
+
+    Basic basic basic index page with a little help
     
+    TODO: make a css and give some style
+
+    xhiena <xhiena@gmail.com>
+    http://www.xhiena.net
+    
+**********************************************************************/
+
+    require("include/top.php");
+    ?><html><head><title>BUS - Basic URL Shortener</title></head>
+    <body>
+    <h1>BUS - Basic URL Shortener - Example page</h1>
+    <h2>Using a form:</h2>
+    example code:
+        <div class="example">
+        <?php
+        $form="
+        <form action=\"add.php\" method=\"get\">
+            url:<input type=\"text\" name=\"u\"/>
+            response format: <select name=\"r\">
+                        <option>html</option>
+                        <option>plain</option>
+                        <option>xml</option>
+                        <option>json</option>
+                    </select>
+            <input type=\"submit\" value=\"enviar\"/>
+        </form>
+        ";
+         highlight_string($form);
+         ?>
+        </div>
+        
+        <?php echo $form;?>
+    
+    <h2>Using a direct link:</h2>
+    The url has to be urlencoded
+    Use: add.php?u=<?php echo urlencode("http://xhiena.net");?>&amp;r=RESPONSE_FORMAT"
+    <a href="add.php?u=<?php echo urlencode("http://xhiena.net");?>&amp;r=html">Add xhiena.net</a>
+    
+    
+    </body></html>
