@@ -1,0 +1,4 @@
+Options +FollowSymlinks
+RewriteEngine on
+RewriteRule ^([0-9a-zA-Z_-]{6})$ go.php?u=$1 [L]
+RewriteRule ^added/([a-zA-Z]+)/([0-9a-zA-Z_-]{6})$ added.php?code=$2&r=$1 [L]
