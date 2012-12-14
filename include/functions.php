@@ -1,40 +1,25 @@
 <?php
-function addUrl($url){
-    global $db;
-    if (!checkUrl($url)){
-        throw new Exception(TXT_ERROR_URL_FORMAT);
-    }
-    $code=getCode();
-    $sql="insert into link values ('','$url','$code','0')";
-    if($db->query($sql)){
-        return $code;
-    }
-    else{
-           echo $db->error;
-        return false;
-    }
-}
-
-function checkUrl($url){
-    //return preg_match('|^http(s)?://[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(/.*)?$|i', $url);
-    return true;
-}
-function getCode(){
-    $cadena_base="abcdefghijklmnopkrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_-";
+/**
+ * Generates a 6-character code composed of uppercase, lowercase, numbers, - and _
+ * 
+ * This method can generate 119877472 non repeted codes of 6 characters
+ */
+function generateCode(){
+    $base="abcdefghijklmnopkrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_-";
     $i=0;
     $c="";
-    while ($i<6){
-        $c.=$cadena_base[rand(0,strlen($cadena_base)-1)];
-        $i++;
+    while (($c!="")&&(!validate::existCode($c))){
+        $c="";
+        while ($i<6){
+            $c.=$base[rand(0,strlen($cadena_base)-1)];
+            $i++;
+        }
     }
-    if (getUrl($c)!=false){
-        return getCode();
-    }
-    else return $c;
+    return $c;
 }
 function getUrl($code){
     global $db;
-    $sql="select url from link where shortcode like '$code'";
+    $sql="select url from BUS_link where shortcode like '$code'";
     $result=$db->query($sql);
     if ($result!=false){
         $row = $result->fetch_object();
@@ -53,7 +38,7 @@ function getUrl($code){
 
 function addVisit($code){
     global $db;
-     $sql="Update link set visited=visited+1 where shortcode like '$code'";
+     $sql="Update BUS_link set visited=visited+1 where shortcode like '$code'";
     $result=$db->query($sql);
     return $result;
 }
