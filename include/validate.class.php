@@ -56,8 +56,9 @@ class validate{
             return false;
         endif;
     }
+    
     /** returns true if exist */
-      static function existUrl($url){
+    static function existUrl($url){
         global $db;
         $sql="select id from BUS_link where url like ?";
         $stmt=$db->prepare($sql);

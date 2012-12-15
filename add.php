@@ -4,7 +4,7 @@
 
     This page creates the shortcode link
     
-    Expects:
+    parameters:
         in $_GET["u"] a urlencoded url
         in $_GET["r"] the output format (html, plain, xml, json)
 

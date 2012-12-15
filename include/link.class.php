@@ -175,10 +175,12 @@ class Link{
      public function addVisit(){
          global $db;
          $this->visits++;
-         $sql="Update BUS_link set visits=? where id = ?";
+         $sql="Update BUS_link set visits = ? where id = ?";
          $stmt=$db->prepare($sql);
-         $stmt->bind_param("i",$this->visits);
-         $ok=$stmt->execute($sql);
+         $v=$this->visits;
+         $i=$this->id;
+         $stmt->bind_param("ii",$v,$i);
+         $ok=$stmt->execute();
          $stmt->close(); 
          return $ok;
      }

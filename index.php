@@ -15,8 +15,13 @@
     ?><html><head><title>BUS - Basic URL Shortener</title></head>
     <body>
     <h1>BUS - Basic URL Shortener - Example page</h1>
-    <h2>Using a form:</h2>
-    example code:
+    <p>
+    Usage: add.php need 2 parameters by get:
+        <br />u : the url urlencoded
+        <br />r : (optional) the response format (html, plain, xml or json)
+    </p>
+     <h2>Using a form:</h2>        
+        Example code:
         <div class="example">
         <?php
         $form="
@@ -39,8 +44,12 @@
     
     <h2>Using a direct link:</h2>
     The url has to be urlencoded
-    Use: add.php?u=<?php echo urlencode("http://xhiena.net");?>&amp;r=RESPONSE_FORMAT"
-    <a href="add.php?u=<?php echo urlencode("http://xhiena.net");?>&amp;r=html">Add xhiena.net</a>
+    Use: add.php?u=<?php echo urlencode("http://the.encoded.url");?>&amp;r=RESPONSE_FORMAT"<br />
+    example : <div class="example">
+        <?php highlight_string(" <a href=\"add.php?u=<?php echo urlencode(\"http://xhiena.net\");?>&amp;r=plain\">Add xhiena.net</a>");
+        ?>
+    </div>
+    <a href="add.php?u=<?php echo urlencode("http://xhiena.net");?>&amp;r=plain">Add xhiena.net</a>
     
     
     </body></html>
