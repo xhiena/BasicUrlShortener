@@ -16,7 +16,7 @@ To install BUS you have to:
 	** WARNING **
 	Executing the link.sql will create a table named "BUS_link" on your database (deleting if exist), be sure you don't have a table named "BUS_link"
 	
-- Copy includes/config-sample.php to includes/config.php and put your configurations
+- Copy includes/config-sample.php to includes/config.php and put your settings
 
 - You can delete the "db" folder and the includes/config-sample.php
 
