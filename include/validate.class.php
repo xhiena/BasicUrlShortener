@@ -61,7 +61,7 @@ class validate{
         global $db;
         $sql="select id from BUS_link where url like ?";
         $stmt=$db->prepare($sql);
-        $stmt->bind_param("s",$code);
+        $stmt->bind_param("s",$url);
         $result=$stmt->execute();
         $stmt->store_result();
         if ($stmt->num_rows>0):

@@ -166,6 +166,7 @@ class Link{
                 $return_value= BASE_LINK_URL.$this->shortcode;
                 break;
         }
+        return $return_value;
     }
     
     /**
