@@ -16,8 +16,8 @@
     try{
         $new_link=Link::create($_GET["u"]);
         $f=isset($_GET["r"])?($_GET["r"]):("");
-        $c=$new_link->getShortCode();
-        header("location: /added/".$r."/".$u);
+        $u=$new_link->getShortCode();
+        header("location: /added/".$f."/".$u);
     }
     catch(Exception $e){
          echo $e->getMessage();

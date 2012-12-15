@@ -11,5 +11,6 @@
     define("TXT_DB_ERROR","Connection to database error");
     define("TXT_ERROR_NOT_FOUND","Couldn't find a link for the URL you clicked.");
     define("TXT_ERROR_URL_FORMAT","Unable to shorten that link. It is not a valid url.");
+    define("TXT_ERROR_CREATE","An error has occurred while creating the link");
     define("TXT_ADDED","Added!");
 ?>

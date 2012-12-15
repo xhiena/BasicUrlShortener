@@ -19,13 +19,12 @@ function generateCode(){
     $base="abcdefghijklmnopkrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_-";
     $i=0;
     $c="";
-    while (($c!="")&&(!validate::existCode($c))){
-        $c="";
-        while ($i<6){
-            $c.=$base[rand(0,strlen($cadena_base)-1)];
-            $i++;
-        }
+    while ($i<6){
+        $c.=$base[rand(0,strlen($base)-1)];
+        $i++;
     }
+    if (validate::existCode($c))
+        return generateCode();
     return $c;
 }
 ?>

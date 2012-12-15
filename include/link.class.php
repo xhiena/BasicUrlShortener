@@ -41,19 +41,19 @@ class Link{
     /** loader by url */
     public static function withUrl( $url ) {
     	$link_instance = new self();
-    	$link_instance->loadByUrl( $shortcode );
+    	$link_instance->loadByUrl( $url );
     	return $link_instance;
     }
     
-    function loadByID($id){
+    protected function loadByID($id){
        $this->loadByField($id);
     }
     
-    function loadByShortCode($shortcode){
+    protected function loadByShortCode($shortcode){
         $this->loadByField($shortcode,"shortcode","s");
     }
       
-    function loadByUrl($url){
+    protected function loadByUrl($url){
         $this->loadByField($url,"url","s");
     }
     
@@ -89,19 +89,16 @@ class Link{
      *      $field: mysql table field where search (default: id)
      *      $type: type of the $value (i: int, d: double,s: string,b: blob). It's for the query bindParam
      */
-    private function loadByField($value,$field="id",$type="i"){
+    protected function loadByField($value,$field="id",$type="i"){
         global $db;
         $sql="select id,url,shortcode,visits from BUS_link where ".$field." = ? Limit 1";
         $stmt=$db->prepare($sql);
-        $stmt->bindParam($type,$value);
+        $stmt->bind_param($type,$value);
         $result=$stmt->execute();
         $stmt->store_result();
-        if (($result!=false)&& ($stmt->num_rows==1)):
-            $row = $result->fetch_object();
-            $this->id=$row->id;
-            $this->url=$row->url;
-            $this->shortcode=$row->shortcode;
-            $this->visits=$row->visits;
+        if (($result!=false) && ($stmt->num_rows==1)):
+            $stmt->bind_result($this->id, $this->url,$this->shortcode,$this->visits);
+            $stmt->fetch();
             return true;
         else:
             throw new Exception(TXT_ERROR_NOT_FOUND);
@@ -117,20 +114,32 @@ class Link{
      static function create($url){
         global $db;
         $url=urldecode($_GET['u']);
+        
         //check if the url is wellformed
         if (!validate::url($url)){
             throw new Exception(TXT_ERROR_URL_FORMAT);
         }
+        //check if exist the url
+        if (validate::existUrl($url)){
+            //if a url exists don't create a new link
+            //this can be done because this script is for personal use
+            //in case of various users use the aplication
+            //is needed to create new link if the user don't have it
+            //in this case we need to modify the existUrl function.
+            return self::withUrl($url);
+        }
         $code=generateCode();
-        $sql="insert into BUS_link values ('','?','?','0')";
+        $sql="insert into BUS_link (url, shortcode,visits) values (?,?,?)";
         $stmt=$db->prepare($sql);
-        $stmt->bindParam("ss",$url,$code);
-        if($stmt->execute($sql)):
+        $visits=0;
+        $stmt->bind_param("ssi",$url,$code,$visits);
+        if($stmt->execute()):
             $stmt->close(); 
-            return self::loadByUrl($url);
+            return self::withUrl($url);
         else:
+            echo "error".$db->error;
             $stmt->close(); 
-            return false;
+            throw new Exception(TXT_ERROR_CREATE);
         endif;
      }
     
@@ -167,7 +176,7 @@ class Link{
          $this->visits++;
          $sql="Update BUS_link set visits=? where id = ?";
          $stmt=$db->prepare($sql);
-         $stmt->bindParam("i",$this->visits);
+         $stmt->bind_param("i",$this->visits);
          $ok=$stmt->execute($sql);
          $stmt->close(); 
          return $ok;

@@ -18,7 +18,7 @@ class validate{
         // SCHEME
         $urlregex = "^(https?|ftp)\:\/\/";
         // USER AND PASS (optional)
-        $urlregex .= "([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?";
+        $urlregex .= "([a-z0-9+!*(),;?\&=\$_.-]+(\:[a-z0-9+!*(),;?\&=\$_.-]+)?@)?";
         // HOSTNAME OR IP
         //$urlregex .= "[a-z0-9+\$_-]+(\.[a-z0-9+\$_-]+)*"; // http://x = allowed (ex. http://localhost, http://routerlogin)
         //$urlregex .= "[a-z0-9+\$_-]+(\.[a-z0-9+\$_-]+)+"; // http://x.x = minimum
@@ -30,22 +30,47 @@ class validate{
         // PATH (optional)
         $urlregex .= "(\/([a-z0-9+\$_-]\.?)+)*\/?";
         // GET Query (optional)
-        $urlregex .= "(\?[a-z+&\$_.-][a-z0-9;:@/&%=+\$_.-]*)?";
+        $urlregex .= "(\?[a-z+\&\$_.-][a-z0-9;:@/\&%=+\$_.-]*)?";
         // ANCHOR (optional)
         $urlregex .= "(#[a-z_.-][a-z0-9+\$_.-]*)?\$";
         
         //add the delimiters for preg_match
-        $urlregex="/".$urlregex."/i";
+        $urlregex="~".$urlregex."~i";
         return preg_match($urlregex, $url);
     }
+    
+    /** returns true if empty or exists */
     static function existCode($code){
         global $db;
+        if ($code=="") return true; //avoid generation of empty codes
         $sql="select id from BUS_link where shortcode like ?";
         $stmt=$db->prepare($sql);
-        $stmt->bindParam("s",$code);
+        $stmt->bind_param("s",$code);
         $result=$stmt->execute();
-        if (false!=$result) return true;
-        return false;
+        $stmt->store_result();
+        if ($stmt->num_rows>0):
+            $stmt->close();
+            return true;
+        else:
+            $stmt->close();
+            return false;
+        endif;
+    }
+    /** returns true if exist */
+      static function existUrl($url){
+        global $db;
+        $sql="select id from BUS_link where url like ?";
+        $stmt=$db->prepare($sql);
+        $stmt->bind_param("s",$code);
+        $result=$stmt->execute();
+        $stmt->store_result();
+        if ($stmt->num_rows>0):
+            $stmt->close();
+            return true;
+        else:
+            $stmt->close();
+            return false;
+        endif;
     }
     
 }    
