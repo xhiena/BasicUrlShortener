@@ -20,6 +20,12 @@ To install BUS you have to:
 
 - You can delete the "db" folder and the includes/config-sample.php
 
-3) Enjoying
+3) Enjoy!
 ---------------
 You can start doing your first shortlink going to: http://where.you/placed/the/BUS/
+
+
+## TO DO
+- Styles for the pages
+- Better formating of the errors
+- A some kind of admin to delete links and see how many visits they have
